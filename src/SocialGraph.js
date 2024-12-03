@@ -2,7 +2,6 @@ import React, { useState, useCallback } from "react";
 import Graph from "react-graph-vis";
 
 const SocialGraph = () => {
-  // State for managing the graph with explicit nodes and edges
   const [graph, setGraph] = useState({
     nodes: [
       {
@@ -39,18 +38,15 @@ const SocialGraph = () => {
     ],
   });
 
-  // State for managing new friend inputs
   const [newFriendForm, setNewFriendForm] = useState({
     name: "",
     connections: "",
   });
 
-  // State for graph selection and path finding
   const [selectedStart, setSelectedStart] = useState(null);
   const [selectedEnd, setSelectedEnd] = useState(null);
   const [result, setResult] = useState(null);
 
-  // Function to find the shortest path using BFS
   const findShortestPath = useCallback((graph, start, end) => {
     const networkMap = graph.edges.reduce((acc, edge) => {
       acc[edge.from] = acc[edge.from] || [];
@@ -97,9 +93,8 @@ const SocialGraph = () => {
     select: (event) => {
       const { nodes: selectedNodes } = event;
 
-      // Completely block selection if two nodes are already selected
       if (selectedStart && selectedEnd) {
-        return false; // Prevent any further selection
+        return false;
       }
 
       if (selectedNodes.length === 1) {
@@ -112,17 +107,14 @@ const SocialGraph = () => {
     },
   };
 
-  // Function to add a new friend and connections
   const addFriend = () => {
     const { name, connections } = newFriendForm;
 
     if (!name) return;
 
     setGraph((prevGraph) => {
-      // Check if node already exists
       const existingNode = prevGraph.nodes.find((node) => node.id === name);
 
-      // Add new node if it doesn't exist
       const updatedNodes = existingNode
         ? prevGraph.nodes
         : [
@@ -136,13 +128,11 @@ const SocialGraph = () => {
             },
           ];
 
-      // Process connections
       const updatedEdges = [...prevGraph.edges];
       if (connections) {
         const friendConnections = connections.split(",").map((c) => c.trim());
 
         friendConnections.forEach((friend) => {
-          // Check if connection already exists
           const existingEdge = updatedEdges.find(
             (edge) =>
               (edge.from === name && edge.to === friend) ||
@@ -162,7 +152,6 @@ const SocialGraph = () => {
       };
     });
 
-    // Reset form
     setNewFriendForm({ name: "", connections: "" });
   };
 
@@ -188,7 +177,6 @@ const SocialGraph = () => {
         Clique em dois nós para calcular o menor caminho.
       </p>
 
-      {/* Friend Addition Section */}
       <div className="mb-3 bg-white p-3 rounded-lg shadow">
         <div className="flex flex-col space-y-3">
           <input
@@ -222,7 +210,7 @@ const SocialGraph = () => {
       </div>
 
       <Graph
-        key={JSON.stringify(graph)} // Ensure unique key
+        key={JSON.stringify(graph)}
         graph={graph}
         options={options}
         events={events}

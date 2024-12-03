@@ -85,7 +85,18 @@ const SocialGraph = () => {
 
   const options = {
     layout: { hierarchical: false },
-    edges: { color: "#000000", width: 3 },
+    edges: {
+      color: "#000000",
+      width: 3,
+      arrows: {
+        to: {
+          enabled: false, // Disable arrows
+        },
+        from: {
+          enabled: false, // Disable arrows
+        },
+      },
+    },
     physics: { enabled: true },
   };
 
@@ -168,17 +179,34 @@ const SocialGraph = () => {
     setResult(null);
   };
 
+  // Modify the graph nodes to highlight selected nodes
+  const modifiedGraph = {
+    ...graph,
+    nodes: graph.nodes.map((node) => ({
+      ...node,
+      color:
+        node.id === selectedStart
+          ? "#FF6B6B" // Red for start node
+          : node.id === selectedEnd
+          ? "#4ECDC4" // Teal for end node
+          : "#6FA3EF", // Original blue for other nodes
+      size: node.id === selectedStart || node.id === selectedEnd ? 50 : 40,
+    })),
+  };
+
   return (
-    <div className="p-4 bg-gray-100 rounded-lg shadow-md max-w-lg mx-auto">
+    <div className="p-4 bg-gray-100 rounded-lg shadow-md max-w-4xl mx-auto">
       <h2 className="text-2xl font-semibold mb-3">
         Menor Caminho em Rede Social - Rede de Amigos
       </h2>
       <p className="text-sm mb-3">
-        Clique em dois nós para calcular o menor caminho.
+        Clique em dois nós para calcular o menor caminho. o caminho atualmente
+        selecionado será exibido abaixo. para calcular um novo caminho, clique
+        em resetar.
       </p>
 
       <div className="mb-3 bg-white p-3 rounded-lg shadow">
-        <div className="flex flex-col space-y-3">
+        <div className="flex flex-row space-x-2">
           <input
             type="text"
             value={newFriendForm.name}
@@ -186,7 +214,7 @@ const SocialGraph = () => {
               setNewFriendForm((prev) => ({ ...prev, name: e.target.value }))
             }
             placeholder="Nome do Amigo"
-            className="px-3 py-2 border rounded text-base"
+            className="px-3 py-2 border rounded text-base flex-0.6"
           />
           <input
             type="text"
@@ -198,7 +226,7 @@ const SocialGraph = () => {
               }))
             }
             placeholder="Amigos conectados (separados por vírgula)"
-            className="px-3 py-2 border rounded text-base"
+            className="px-3 py-2 border rounded text-base flex-1"
           />
           <button
             onClick={addFriend}
@@ -210,8 +238,8 @@ const SocialGraph = () => {
       </div>
 
       <Graph
-        key={JSON.stringify(graph)}
-        graph={graph}
+        key={JSON.stringify(modifiedGraph)}
+        graph={modifiedGraph}
         options={options}
         events={events}
         style={{ height: "350px", borderRadius: "8px" }}

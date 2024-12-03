@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Trabalho Grafos",
+  "name": "Rede Social - Menor Caminho",
   "icons": [
     {
       "src": "favicon.ico",
